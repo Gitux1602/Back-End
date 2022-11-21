@@ -96,7 +96,6 @@ export const Login = async (req: Request, res: Response) => {
     const {email, password} = req.body;
 
     const user = await getRepository(User).findOne({email});
-
     if (!user) {
         return res.status(400).send({
             message: 'Invalid credentials'
