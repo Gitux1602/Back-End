@@ -9,9 +9,9 @@ import { Products} from "../entity/products.entity";
 
 export const listProducts = async (req: Request,res: Response)=>{
     const allproducts = await getRepository(Products);
-    res.send(allproducts);
-    console.log(res.send(allproducts));
-     
+    const products = await allproducts.find();
+    //Se usó el metodo incorrecto
+    res.json(products)
 }
 export const listProductsID = async (req: Request, res: Response)=>{
     const { id } = req.params;

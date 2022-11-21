@@ -7,7 +7,8 @@ export const routes = (router: Router) => {
     router.get('/api/user', AuthenticatedUser);
     router.post('/api/refresh', Refresh);
     router.post('/api/logout', Logout);
-    router.get('/', listProducts);
+    //Tronaba por que no habia creado la ruta
+    router.get('/api/list', listProducts);
     router.get('/api/listProducts/listProductsID', listProductsID);
     router.delete('/api/listProducts/deleteProducts', deleteProducts);
     router.post('/api/listProducts/postProduct', postProduct);
