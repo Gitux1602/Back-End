@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {AuthenticatedUser, updateProduct,postProduct, deleteProducts,listProductsID,listProducts, Login, Logout, Refresh, Register} from "./controller/auth.controller";
+import {AuthenticatedUser, updateProduct,postProduct, deleteProducts,listProducts, Login, Logout, Refresh, Register} from "./controller/auth.controller";
 
 export const routes = (router: Router) => {
     router.post('/api/register', Register);
@@ -9,8 +9,8 @@ export const routes = (router: Router) => {
     router.post('/api/logout', Logout);
     //Tronaba por que no habia creado la ruta
     router.get('/api/list', listProducts);
-    router.get('/api/listProducts/listProductsID', listProductsID);
-    router.delete('/api/listProducts/deleteProducts', deleteProducts);
-    router.post('/api/listProducts/postProduct', postProduct);
-    router.get('/api/listProducts/updateProduct', updateProduct);
+    
+    router.delete('/api/list/:id', deleteProducts);
+    router.post('/api/list', postProduct);
+    router.put('/api/list/:idp', updateProduct);
 }

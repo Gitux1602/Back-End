@@ -1,44 +1,39 @@
-import {Request, Response} from "express";
-import {getRepository, MoreThanOrEqual} from "typeorm";
-import {User} from "../entity/user.entity";
+import { Request, Response } from "express";
+import { getRepository, MoreThanOrEqual } from "typeorm";
+import { User } from "../entity/user.entity";
 import bcryptjs from 'bcryptjs';
-import {sign, verify} from 'jsonwebtoken';
-import {Token} from "../entity/token.entity";
+import { sign, verify } from 'jsonwebtoken';
+import { Token } from "../entity/token.entity";
 
-import { Products} from "../entity/products.entity";
+import { Products } from "../entity/products.entity";
 
-export const listProducts = async (req: Request,res: Response)=>{
+export const listProducts = async (req: Request, res: Response) => {
     const allproducts = await getRepository(Products);
     const products = await allproducts.find();
     //Se usó el metodo incorrecto
     res.json(products)
 }
-export const listProductsID = async (req: Request, res: Response)=>{
-    const { id } = req.params;
-    const productbyid = await getRepository(Products).findOne(id);
-   
-    if(productbyid){
-        res.send(productbyid)
-    } else {
-        res.status(404)
-    }
 
+export const deleteProducts = async (req: Request, res: Response) => {
+    const { idp, namep, description, price, stock } = req.body;
+    const delproduct = await getRepository(Products).findOne({ idp });
+
+    if (delproduct) {
+        await getRepository(Products).delete({ idp, namep, description, price, stock });
+        res.send({
+            message: 'success'
+        });
+    }else
+    res.json({msg:'El producto no existe'})
 }
-export const deleteProducts = async (req: Request, res: Response)=>{
-    const { id } = req.params;
-    const productbyid = await getRepository(Products).findOne(id);
-    
-    if(productbyid){
-        await productbyid.destroy();
-    } else {
-        res.status(404)
-    }
-}
+
+
+
 export const postProduct = async (req: Request, res: Response) => {
     const { body } = req;
 
     try {
-        await Products.create(body);
+        // await Products.create(body);
         res.send(body)
     } catch (error) {
         console.log(error);
@@ -56,32 +51,30 @@ export const updateProduct = async (req: Request, res: Response) => {
 
         const product = await getRepository(Products).findOne(id);
 
-    if(product) {
-        await product.update(body);
-        res.json({
-            msg: 'El producto fue actualziado con exito'
-        })
+        if (product) {
+            //await product.update(body);
+            res.json({
+                msg: 'El producto fue actualziado con exito'
+            })
 
-    } else {
-        res.status(404).json({
-            msg: `No existe un producto con el id ${id}`
-        })
-    }
-        
+        } else {
+            res.status(404).json({
+                msg: `No existe un producto con el id ${id}`
+            })
+        }
+
     } catch (error) {
         console.log(error);
         res.json({
             msg: `Upps ocurrio un error, comuniquese con soporte`
         })
     }
-
-    
 }
 
 export const Register = async (req: Request, res: Response) => {
-    
 
-    const {name, email, password} = req.body;
+
+    const { name, email, password } = req.body;
 
     const user = await getRepository(User).save({
         name,
@@ -93,9 +86,9 @@ export const Register = async (req: Request, res: Response) => {
 }
 
 export const Login = async (req: Request, res: Response) => {
-    const {email, password} = req.body;
+    const { email, password } = req.body;
 
-    const user = await getRepository(User).findOne({email});
+    const user = await getRepository(User).findOne({ email });
     if (!user) {
         return res.status(400).send({
             message: 'Invalid credentials'
@@ -110,7 +103,7 @@ export const Login = async (req: Request, res: Response) => {
 
     const refreshToken = sign({
         id: user.id
-    }, "refresh_secret", {expiresIn: '1w'});
+    }, "refresh_secret", { expiresIn: '1w' });
 
     res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
@@ -128,7 +121,7 @@ export const Login = async (req: Request, res: Response) => {
 
     const token = sign({
         id: user.id
-    }, "access_secret", {expiresIn: '30s'});
+    }, "access_secret", { expiresIn: '30s' });
 
     res.send({
         token
@@ -155,7 +148,7 @@ export const AuthenticatedUser = async (req: Request, res: Response) => {
             });
         }
 
-        const {password, ...data} = user;
+        const { password, ...data } = user;
 
         res.send(data);
     } catch (e) {
@@ -190,7 +183,7 @@ export const Refresh = async (req: Request, res: Response) => {
 
         const token = sign({
             id: payload.id
-        }, "access_secret", {expiresIn: '30s'});
+        }, "access_secret", { expiresIn: '30s' });
 
         res.send({
             token
@@ -205,9 +198,9 @@ export const Refresh = async (req: Request, res: Response) => {
 export const Logout = async (req: Request, res: Response) => {
     const refreshToken = req.cookies['refreshToken'];
 
-    await getRepository(Token).delete({token: refreshToken});
+    await getRepository(Token).delete({ token: refreshToken });
 
-    res.cookie('refreshToken', '', {maxAge: 0});
+    res.cookie('refreshToken', '', { maxAge: 0 });
 
     res.send({
         message: 'success'

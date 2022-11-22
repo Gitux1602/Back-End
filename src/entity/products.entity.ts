@@ -18,7 +18,4 @@ export class Products {
     @Column()
     stock!: number;
     
-    destroy: any;
-    static create: any;
-    update: any;
 }
