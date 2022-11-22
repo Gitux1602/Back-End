@@ -15,11 +15,10 @@ export const listProducts = async (req: Request, res: Response) => {
 }
 
 export const deleteProducts = async (req: Request, res: Response) => {
-    const { idp, namep, description, price, stock } = req.body;
     const { id } = req.params;
     const delproduct = await getRepository(Products).findOne(id);
     if (delproduct) {
-        console.log(delproduct);
+        //console.log(delproduct);
         await getRepository(Products).delete(delproduct);
         res.send({
             message: 'success'
@@ -32,16 +31,11 @@ export const deleteProducts = async (req: Request, res: Response) => {
 
 export const postProduct = async (req: Request, res: Response) => {
     const { body } = req;
-
-    try {
-        // await Products.create(body);
-        res.send(body)
-    } catch (error) {
-        console.log(error);
-        res.json({
-            msg: `Upps ocurrio un error`
-        })
-    }
+    console.log(body);
+        const { namep, description, price, stock } = req.body;
+        const newProduct = getRepository(Products).create({namep, description, price, stock});
+        const x = await getRepository(Products).save(newProduct);
+        res.send(x);
 }
 
 export const updateProduct = async (req: Request, res: Response) => {
