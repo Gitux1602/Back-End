@@ -16,10 +16,11 @@ export const listProducts = async (req: Request, res: Response) => {
 
 export const deleteProducts = async (req: Request, res: Response) => {
     const { idp, namep, description, price, stock } = req.body;
-    const delproduct = await getRepository(Products).findOne({ idp });
-
+    const { id } = req.params;
+    const delproduct = await getRepository(Products).findOne(id);
     if (delproduct) {
-        await getRepository(Products).delete({ idp, namep, description, price, stock });
+        console.log(delproduct);
+        await getRepository(Products).delete(delproduct);
         res.send({
             message: 'success'
         });

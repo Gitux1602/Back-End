@@ -11,6 +11,7 @@ export const routes = (router: Router) => {
     router.get('/api/list', listProducts);
     
     router.delete('/api/list/:id', deleteProducts);
+    
     router.post('/api/list', postProduct);
     router.put('/api/list/:idp', updateProduct);
 }
