@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {AuthenticatedUser, updateProduct,postProduct, deleteProducts,listProducts, Login, Logout, Refresh, Register} from "./controller/auth.controller";
+import {AuthenticatedUser ,updateProduct,postProduct, deleteProducts,listProducts, Login, Logout, Refresh, Register} from "./controller/auth.controller";
 
 export const routes = (router: Router) => {
     router.post('/api/register', Register);
@@ -11,7 +11,7 @@ export const routes = (router: Router) => {
     router.get('/api/list', listProducts);
     
     router.delete('/api/list/:id', deleteProducts);
+    router.get('/api/list/:id', updateProduct);
     
     router.post('/api/list', postProduct);
-    router.put('/api/list/:idp', updateProduct);
 }

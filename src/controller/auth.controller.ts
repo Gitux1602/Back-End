@@ -27,7 +27,11 @@ export const deleteProducts = async (req: Request, res: Response) => {
     res.json({msg:'El producto no existe'})
 }
 
-
+export const updateProduct = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const product = await getRepository(Products).findOne(id);
+    res.send(product);
+}
 
 export const postProduct = async (req: Request, res: Response) => {
     const { body } = req;
@@ -36,34 +40,6 @@ export const postProduct = async (req: Request, res: Response) => {
         const newProduct = getRepository(Products).create({namep, description, price, stock});
         const x = await getRepository(Products).save(newProduct);
         res.send(x);
-}
-
-export const updateProduct = async (req: Request, res: Response) => {
-    const { body } = req;
-    const { id } = req.params;
-
-    try {
-
-        const product = await getRepository(Products).findOne(id);
-
-        if (product) {
-            //await product.update(body);
-            res.json({
-                msg: 'El producto fue actualziado con exito'
-            })
-
-        } else {
-            res.status(404).json({
-                msg: `No existe un producto con el id ${id}`
-            })
-        }
-
-    } catch (error) {
-        console.log(error);
-        res.json({
-            msg: `Upps ocurrio un error, comuniquese con soporte`
-        })
-    }
 }
 
 export const Register = async (req: Request, res: Response) => {
