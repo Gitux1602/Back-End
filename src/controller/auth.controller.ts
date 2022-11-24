@@ -18,7 +18,6 @@ export const deleteProducts = async (req: Request, res: Response) => {
     const { id } = req.params;
     const delproduct = await getRepository(Products).findOne(id);
     if (delproduct) {
-        //console.log(delproduct);
         await getRepository(Products).delete(delproduct);
         res.send({
             message: 'success'
@@ -30,7 +29,16 @@ export const deleteProducts = async (req: Request, res: Response) => {
 export const updateProduct = async (req: Request, res: Response) => {
     const { id } = req.params;
     const product = await getRepository(Products).findOne(id);
-    res.send(product);
+    
+    if (product) {
+        getRepository(Products).merge(product, req.body);
+        const results = await getRepository(Products).save(product);
+        return res.json(results);
+    }else{
+        res.json({msg:'El producto no existe'})
+    }
+    //res.send(product);
+
 }
 
 export const postProduct = async (req: Request, res: Response) => {
