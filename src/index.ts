@@ -2,7 +2,7 @@ import express from 'express';
 import cookieParser from "cookie-parser";
 import cors from 'cors';
 import {createConnection} from "typeorm";
-import {routes} from "./src/routes";
+import {routes} from "./routes";
 
 
 
